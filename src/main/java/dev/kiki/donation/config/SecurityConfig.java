@@ -13,6 +13,9 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -39,6 +42,16 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                //This is for cors configuration....... (accepts all origins)
+                .cors(customizer ->
+                        customizer.configurationSource(request -> {
+                            var corsConfig = new CorsConfiguration();
+                            corsConfig.setAllowedOrigins(List.of("*"));
+                            corsConfig.setAllowedMethods(List.of("*"));
+                            corsConfig.setAllowedHeaders(List.of("*"));
+                            return corsConfig;
+                        })
+                )
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(
                         customizer -> customizer
